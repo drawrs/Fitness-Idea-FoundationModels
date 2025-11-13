@@ -1,13 +1,13 @@
 //
-//  EquipmentCard.swift
+//  BodyPartCard.swift
 //  Fitness Idea
 //
 //  Created by Rizal Hilman on 13/11/25.
 //
 import SwiftUI
 
-struct EquipmentCard: View {
-    let equipment: Equipment
+struct BodyPartCard: View {
+    let bodyPart: BodyPart
     let isSelected: Bool
     let action: () -> Void
     
@@ -16,22 +16,21 @@ struct EquipmentCard: View {
             VStack(spacing: 16) {
                 ZStack {
                     Circle()
-                        .fill(equipment.color.opacity(isSelected ? 0.3 : 0.1))
+                        .fill(bodyPart.color.opacity(isSelected ? 0.3 : 0.1))
                         .frame(width: 64, height: 64)
                     
-                    Image(systemName: equipment.iconName)
+                    Image(systemName: bodyPart.iconName)
                         .font(.title2)
                         .fontWeight(.medium)
-                        .foregroundStyle(isSelected ? equipment.color : .secondary)
+                        .foregroundStyle(isSelected ? bodyPart.color : .secondary)
                 }
                 
-                Text(equipment.name)
+                Text(bodyPart.name)
                     .font(.callout)
                     .fontWeight(.semibold)
                     .foregroundStyle(isSelected ? .primary : .secondary)
-                    .lineLimit(2)
+                    .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                    .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 130)
@@ -39,11 +38,11 @@ struct EquipmentCard: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.systemBackground))
                     .stroke(
-                        isSelected ? equipment.color : Color(.systemGray4),
+                        isSelected ? bodyPart.color : Color(.systemGray4),
                         lineWidth: isSelected ? 2.5 : 1
                     )
                     .shadow(
-                        color: isSelected ? equipment.color.opacity(0.2) : .clear,
+                        color: isSelected ? bodyPart.color.opacity(0.2) : .clear,
                         radius: isSelected ? 8 : 0,
                         x: 0,
                         y: isSelected ? 4 : 0
