@@ -15,7 +15,8 @@ struct BodyPart: Identifiable, Hashable {
 }
 
 struct BodyPartSelectionView: View {
-    @State private var selectedBodyParts: Set<BodyPart> = []
+    @Binding var selectedBodyParts: Set<BodyPart>
+    let onContinue: () -> Void
     
     private let bodyParts = [
         BodyPart(name: "Chest", iconName: "figure.strengthtraining.traditional", color: .red),
@@ -29,7 +30,7 @@ struct BodyPartSelectionView: View {
     ]
     
     var body: some View {
-        NavigationView {
+    
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     // Scrollable content
@@ -42,6 +43,7 @@ struct BodyPartSelectionView: View {
                                     .fontWeight(.heavy)
                                     .foregroundStyle(.primary)
                                     .tracking(-0.5)
+                                    .multilineTextAlignment(.center)
                                 
                                 Text("Select the body parts you want to exercise today")
                                     .font(.title3)
@@ -91,9 +93,9 @@ struct BodyPartSelectionView: View {
                             
                             Button(action: startWorkout) {
                                 HStack(spacing: 8) {
-                                    Image(systemName: "play.fill")
+                                    Image(systemName: "arrow.right.circle.fill")
                                         .font(.headline)
-                                    Text("Start Workout")
+                                    Text("Continue")
                                         .fontWeight(.semibold)
                                     Text("(\(selectedBodyParts.count))")
                                         .fontWeight(.medium)
@@ -103,7 +105,7 @@ struct BodyPartSelectionView: View {
                                 .foregroundStyle(.white)
                                 .padding(.vertical, 18)
                                 .frame(maxWidth: .infinity)
-                                .background(.tint, in: RoundedRectangle(cornerRadius: 16))
+                                .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 16))
                             }
                             .padding(.horizontal, 20)
                         }
@@ -119,7 +121,6 @@ struct BodyPartSelectionView: View {
             }
             .animation(.easeInOut(duration: 0.3), value: selectedBodyParts.isEmpty)
             .navigationBarHidden(true)
-        }
     }
     
     private func toggleBodyPart(_ bodyPart: BodyPart) {
@@ -133,9 +134,7 @@ struct BodyPartSelectionView: View {
     }
     
     private func startWorkout() {
-        // This is where you would navigate to the workout screen
-        // or handle the workout start logic
-        print("Starting workout with: \(selectedBodyParts.map { $0.name })")
+        onContinue()
     }
 }
 
@@ -189,5 +188,8 @@ struct BodyPartCard: View {
 }
 
 #Preview {
-    BodyPartSelectionView()
+    BodyPartSelectionView(
+        selectedBodyParts: .constant([]),
+        onContinue: {}
+    )
 }

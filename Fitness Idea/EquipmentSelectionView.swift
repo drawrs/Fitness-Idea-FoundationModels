@@ -24,8 +24,10 @@ enum EquipmentCategory: String, CaseIterable {
 }
 
 struct EquipmentSelectionView: View {
-    @State private var selectedEquipment: Set<Equipment> = []
+    @Binding var selectedEquipment: Set<Equipment>
     @State private var selectedCategory: EquipmentCategory? = nil
+    let onBack: () -> Void
+    let onContinue: () -> Void
     
     private let equipment = [
         // Free Weights
@@ -67,19 +69,20 @@ struct EquipmentSelectionView: View {
     }
     
     var body: some View {
-        NavigationView {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     // Scrollable content
                     ScrollView {
                         VStack(spacing: 20) {
-                            // Header
+                            // Header with back button
                             VStack(spacing: 12) {
+                                
                                 Text("Select Equipment")
                                     .font(.largeTitle)
                                     .fontWeight(.heavy)
                                     .foregroundStyle(.primary)
                                     .tracking(-0.5)
+                                    .multilineTextAlignment(.center)
                                 
                                 Text("Choose the equipment you have available for your workout")
                                     .font(.title3)
@@ -185,7 +188,6 @@ struct EquipmentSelectionView: View {
             }
             .animation(.easeInOut(duration: 0.3), value: selectedEquipment.isEmpty)
             .navigationBarHidden(true)
-        }
     }
     
     private func toggleEquipment(_ equipment: Equipment) {
@@ -199,8 +201,7 @@ struct EquipmentSelectionView: View {
     }
     
     private func continueToWorkout() {
-        // This is where you would navigate to the next screen or start the workout
-        print("Continuing with equipment: \(selectedEquipment.map { $0.name })")
+        onContinue()
     }
 }
 
@@ -278,5 +279,9 @@ struct CategoryFilterButton: View {
 }
 
 #Preview {
-    EquipmentSelectionView()
+    EquipmentSelectionView(
+        selectedEquipment: .constant([]),
+        onBack: {},
+        onContinue: {}
+    )
 }
