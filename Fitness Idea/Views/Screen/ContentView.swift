@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-enum WorkoutStep {
-    case bodyPartSelection
-    case equipmentSelection
-    case workoutRecommendation
-}
-
 struct ContentView: View {
     @State private var currentStep: WorkoutStep = .bodyPartSelection
     @State private var selectedBodyParts: Set<BodyPart> = []

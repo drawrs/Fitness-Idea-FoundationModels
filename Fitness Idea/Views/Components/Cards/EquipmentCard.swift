@@ -1,13 +1,13 @@
 //
-//  BodyPartCard.swift
+//  EquipmentCard.swift
 //  Fitness Idea
 //
 //  Created by Rizal Hilman on 13/11/25.
 //
 import SwiftUI
 
-struct BodyPartCard: View {
-    let bodyPart: BodyPart
+struct EquipmentCard: View {
+    let equipment: Equipment
     let isSelected: Bool
     let action: () -> Void
     
@@ -16,21 +16,22 @@ struct BodyPartCard: View {
             VStack(spacing: 16) {
                 ZStack {
                     Circle()
-                        .fill(bodyPart.color.opacity(isSelected ? 0.3 : 0.1))
+                        .fill(equipment.color.opacity(isSelected ? 0.3 : 0.1))
                         .frame(width: 64, height: 64)
                     
-                    Image(systemName: bodyPart.iconName)
+                    Image(systemName: equipment.iconName)
                         .font(.title2)
                         .fontWeight(.medium)
-                        .foregroundStyle(isSelected ? bodyPart.color : .secondary)
+                        .foregroundStyle(isSelected ? equipment.color : .secondary)
                 }
                 
-                Text(bodyPart.name)
+                Text(equipment.name)
                     .font(.callout)
                     .fontWeight(.semibold)
                     .foregroundStyle(isSelected ? .primary : .secondary)
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .minimumScaleFactor(0.8)
+                    .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
             .frame(height: 130)
@@ -38,11 +39,11 @@ struct BodyPartCard: View {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.systemBackground))
                     .stroke(
-                        isSelected ? bodyPart.color : Color(.systemGray4),
+                        isSelected ? equipment.color : Color(.systemGray4),
                         lineWidth: isSelected ? 2.5 : 1
                     )
                     .shadow(
-                        color: isSelected ? bodyPart.color.opacity(0.2) : .clear,
+                        color: isSelected ? equipment.color.opacity(0.2) : .clear,
                         radius: isSelected ? 8 : 0,
                         x: 0,
                         y: isSelected ? 4 : 0
