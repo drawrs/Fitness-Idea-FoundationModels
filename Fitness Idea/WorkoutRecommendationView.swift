@@ -11,6 +11,7 @@ struct WorkoutRecommendationView: View {
     let selectedBodyParts: Set<BodyPart>
     let selectedEquipment: Set<Equipment>
     let onStartOver: () -> Void
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
             GeometryReader { geometry in
@@ -159,7 +160,10 @@ struct WorkoutRecommendationView: View {
                         }
                         .padding(.horizontal, 20)
                         
-                        Button(action: onStartOver) {
+                        Button(action: {
+                            onStartOver()
+                            withAnimation { dismiss() }
+                        }) {
                             Text("Start Over")
                                 .font(.callout)
                                 .fontWeight(.medium)
