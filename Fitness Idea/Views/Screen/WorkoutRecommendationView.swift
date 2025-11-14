@@ -119,11 +119,14 @@ struct WorkoutRecommendationView: View {
                                     if viewModel.recommendedExercises.isEmpty {
                                         Text("Generating recommendations...")
                                             .foregroundColor(.secondary)
-                                    } else {
-                                        ForEach(viewModel.recommendedExercises) { exercise in
-                                            ExerciseCard(exercise: exercise)
-                                        }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                     }
+                                    
+                                    ForEach(viewModel.partialRecommendedExercises) { exercise in
+                                        ExerciseCard(exercise: exercise)
+                                            .animation(.easeInOut, value: viewModel.partialRecommendedExercises.map(\.id))
+                                    }
+                                    
                                     
                                 }
                                 .padding(.horizontal, 20)

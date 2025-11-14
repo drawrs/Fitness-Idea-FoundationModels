@@ -7,25 +7,25 @@
 import SwiftUI
 
 struct ExerciseCard: View {
-    let exercise: ExerciseRecommendation
+    let exercise: ExerciseRecommendation.PartiallyGenerated
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(exercise.name)
+            Text(exercise.name ?? "...")
                 .font(.title3)
                 .fontWeight(.semibold)
                 .foregroundStyle(.primary)
 
             HStack(spacing: 16) {
-                Label("\(exercise.sets) sets", systemImage: "square.stack.3d.up.fill")
+                Label("\(exercise.sets ?? 0) sets", systemImage: "square.stack.3d.up.fill")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Label("\(exercise.reps) reps", systemImage: "repeat")
+                Label("\(exercise.reps ?? 0) reps", systemImage: "repeat")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Label(exercise.duration, systemImage: "timer")
+                Label(exercise.duration ?? "...", systemImage: "timer")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

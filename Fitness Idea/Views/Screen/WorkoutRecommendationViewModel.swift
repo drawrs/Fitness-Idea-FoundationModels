@@ -40,6 +40,7 @@ final class WorkoutRecommendationViewModel: ObservableObject {
         setupLanguageModel()
     }
 
+    @Published var partialRecommendedExercises: [ExerciseRecommendation.PartiallyGenerated] = []
     @Published var recommendedExercises: [ExerciseRecommendation] = []
     
     func setupLanguageModel(){
@@ -73,12 +74,19 @@ final class WorkoutRecommendationViewModel: ObservableObject {
                     - For dynamic exercises, use realistic sets and reps, and set duration to "0s".
                     """
                 }
-            let response = try await languageModelSession.respond(to: prompt, generating: [ExerciseRecommendation].self)
+            let stream = languageModelSession.streamResponse(to: prompt, generating: [ExerciseRecommendation].self)
             
-            self.recommendedExercises = response.content
+            for try await snapshot in stream {
+                await MainActor.run {
+                    partialRecommendedExercises = snapshot.content
+                }
+            }
             
-            print(response.content)
-            
+            let completed = try await stream.collect()
+            await MainActor.run {
+                recommendedExercises = completed.content
+            }
+
         } catch {
             fatalError(error.localizedDescription)
         }
