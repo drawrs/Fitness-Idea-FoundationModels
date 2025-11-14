@@ -112,11 +112,19 @@ struct WorkoutRecommendationView: View {
                                     .font(.headline)
                                     .fontWeight(.bold)
                                     .padding(.horizontal, 20)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
 
+                                
                                 VStack(spacing: 12) {
-                                    ForEach(viewModel.recommendedExercises) { exercise in
-                                        ExerciseCard(exercise: exercise)
+                                    if viewModel.recommendedExercises.isEmpty {
+                                        Text("Generating recommendations...")
+                                            .foregroundColor(.secondary)
+                                    } else {
+                                        ForEach(viewModel.recommendedExercises) { exercise in
+                                            ExerciseCard(exercise: exercise)
+                                        }
                                     }
+                                    
                                 }
                                 .padding(.horizontal, 20)
                             }
@@ -158,7 +166,6 @@ struct WorkoutRecommendationView: View {
                         }
                     }
                     .padding(.top, 16)
-                    .padding(.bottom, max(geometry.safeAreaInsets.bottom, 20))
                     .background(
                         Rectangle()
                             .fill(.ultraThinMaterial)
@@ -167,6 +174,11 @@ struct WorkoutRecommendationView: View {
                 }
             }
             .navigationBarHidden(true)
+            .onAppear {
+                Task {
+                    await viewModel.generateRecommendation()
+                }
+            }
     }
 }
 
