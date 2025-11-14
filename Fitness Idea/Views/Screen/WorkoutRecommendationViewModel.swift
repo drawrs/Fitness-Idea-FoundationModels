@@ -7,7 +7,18 @@ final class WorkoutRecommendationViewModel: ObservableObject {
     @Published var selectedEquipment: Set<Equipment>
     private let onStartOver: () -> Void
 
-    private let instructions: String = ""
+    private let instructions: String = """
+                You are a fitness coach AI that generates strength and conditioning exercises.
+
+                General guidelines:
+                - Focus on beginner to intermediate difficulty.
+                - Use clear and conventional exercise names (e.g., “Goblet Squat”, “Plank Hold”).
+                - Use realistic set and rep ranges appropriate for the exercise type.
+                - Use duration only for static or isometric holds (e.g., “30s”, “45s”).
+                - For dynamic exercises, set duration to “0s”.
+                - Only recommend exercises that match the user’s target muscles and available equipment.
+                - Keep responses concise with no explanations or extra commentary.
+                """
     var languageModelSession: LanguageModelSession?
     
     private var targetMusclesList: String {
@@ -48,21 +59,18 @@ final class WorkoutRecommendationViewModel: ObservableObject {
             guard let languageModelSession else { return }
             
             let prompt = Prompt {
-                """
-                    Generate a list of workout exercise based on user preferences.
-                    
-                    User Requirement:
-                    - Target Muscles: \(targetMusclesList)
-                    - Available Equipment: \(availableEquipmentList)
-                    - For each exercise, provide: exercise_name, sets, reps, duration_seconds
-                    
-                    Rules:
-                    1. Only include exercises relevant to the target muscles.
-                    2. Only use equipment the user has.
-                    3. Include a mix of equipment-based and bodyweight options.
-                    4. Keep exercise naming standard and simple.
-                    
-                    Goal: Return 6–10 exercises that match the user’s target muscle groups and available equipment.
+                    """
+                    Generate 6–8 exercises for a single workout.
+
+                    Target muscles: \(targetMusclesList)
+                    Available equipment: \(availableEquipmentList)
+
+                    Constraints:
+                    - Every exercise must primarily work the listed target muscles.
+                    - Only use the equipment listed above or pure bodyweight.
+                    - Each ExerciseRecommendation represents one exercise in the workout.
+                    - For static / isometric exercises (e.g., plank), set reps to 0 and use duration like "30s" or "45s".
+                    - For dynamic exercises, use realistic sets and reps, and set duration to "0s".
                     """
                 }
             let response = try await languageModelSession.respond(to: prompt, generating: [ExerciseRecommendation].self)

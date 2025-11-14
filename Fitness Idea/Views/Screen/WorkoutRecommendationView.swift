@@ -151,8 +151,9 @@ struct WorkoutRecommendationView: View {
                             .foregroundStyle(.white)
                             .padding(.vertical, 18)
                             .frame(maxWidth: .infinity)
-                            .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 16))
+                            .background( viewModel.recommendedExercises.isEmpty ? Color.secondary : Color.accentColor, in: RoundedRectangle(cornerRadius: 16))
                         }
+                        .disabled(viewModel.recommendedExercises.isEmpty)
                         .padding(.horizontal, 20)
                         
                         Button(action: {
