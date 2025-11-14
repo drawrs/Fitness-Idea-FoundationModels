@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct WorkoutRecommendationView: View {
-    let selectedBodyParts: Set<BodyPart>
-    let selectedEquipment: Set<Equipment>
-    let onStartOver: () -> Void
+    @StateObject private var viewModel: WorkoutRecommendationViewModel
     @Environment(\.dismiss) private var dismiss
+    
+    init(selectedBodyParts: Set<BodyPart>, selectedEquipment: Set<Equipment>, onStartOver: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: WorkoutRecommendationViewModel(selectedBodyParts: selectedBodyParts,
+                                                                              selectedEquipment: selectedEquipment,
+                                                                              onStartOver: onStartOver))
+    }
     
     var body: some View {
             GeometryReader { geometry in
@@ -49,7 +53,7 @@ struct WorkoutRecommendationView: View {
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 12) {
-                                        ForEach(Array(selectedBodyParts), id: \.id) { bodyPart in
+                                        ForEach(Array(viewModel.selectedBodyParts), id: \.id) { bodyPart in
                                             HStack(spacing: 8) {
                                                 Image(systemName: bodyPart.iconName)
                                                     .font(.caption)
@@ -80,7 +84,7 @@ struct WorkoutRecommendationView: View {
                                 
                                 ScrollView(.horizontal, showsIndicators: false) {
                                     HStack(spacing: 12) {
-                                        ForEach(Array(selectedEquipment), id: \.id) { equipment in
+                                        ForEach(Array(viewModel.selectedEquipment), id: \.id) { equipment in
                                             HStack(spacing: 8) {
                                                 Image(systemName: equipment.iconName)
                                                     .font(.caption)
@@ -102,34 +106,17 @@ struct WorkoutRecommendationView: View {
                                 }
                             }
                             
-                            // Recommended Workouts (placeholder for now)
+                            // Recommended Exercises
                             VStack(alignment: .leading, spacing: 16) {
-                                Text("Recommended Workouts")
+                                Text("Recommended Exercises")
                                     .font(.headline)
                                     .fontWeight(.bold)
                                     .padding(.horizontal, 20)
-                                
+
                                 VStack(spacing: 12) {
-                                    WorkoutCard(
-                                        title: "Custom \(selectedBodyParts.first?.name ?? "Full Body") Workout",
-                                        duration: "30-45 min",
-                                        difficulty: "Intermediate",
-                                        exercises: selectedEquipment.count + selectedBodyParts.count
-                                    )
-                                    
-                                    WorkoutCard(
-                                        title: "Quick \(selectedBodyParts.count > 1 ? "Multi-Muscle" : selectedBodyParts.first?.name ?? "Body") Blast",
-                                        duration: "15-20 min",
-                                        difficulty: "Beginner",
-                                        exercises: max(selectedEquipment.count, 4)
-                                    )
-                                    
-                                    WorkoutCard(
-                                        title: "Advanced \(selectedBodyParts.first?.name ?? "Strength") Training",
-                                        duration: "45-60 min",
-                                        difficulty: "Advanced",
-                                        exercises: selectedEquipment.count + 3
-                                    )
+                                    ForEach(viewModel.recommendedExercises) { exercise in
+                                        ExerciseCard(exercise: exercise)
+                                    }
                                 }
                                 .padding(.horizontal, 20)
                             }
@@ -144,7 +131,7 @@ struct WorkoutRecommendationView: View {
                     VStack(spacing: 16) {
                         Button(action: {
                             // Start the selected workout
-                            print("Starting workout!")
+                            viewModel.startWorkout()
                         }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "play.fill")
@@ -161,7 +148,7 @@ struct WorkoutRecommendationView: View {
                         .padding(.horizontal, 20)
                         
                         Button(action: {
-                            onStartOver()
+                            viewModel.startOver()
                             withAnimation { dismiss() }
                         }) {
                             Text("Start Over")
@@ -180,43 +167,6 @@ struct WorkoutRecommendationView: View {
                 }
             }
             .navigationBarHidden(true)
-    }
-}
-
-struct WorkoutCard: View {
-    let title: String
-    let duration: String
-    let difficulty: String
-    let exercises: Int
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.semibold)
-                .foregroundStyle(.primary)
-            
-            HStack(spacing: 16) {
-                Label(duration, systemImage: "clock")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                
-                Label(difficulty, systemImage: "chart.bar")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                
-                Label("\(exercises) exercises", systemImage: "list.bullet")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.systemBackground))
-                .stroke(Color(.systemGray4), lineWidth: 1)
-        )
     }
 }
 
