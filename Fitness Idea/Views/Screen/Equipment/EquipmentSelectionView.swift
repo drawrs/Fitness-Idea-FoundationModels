@@ -133,7 +133,7 @@ struct EquipmentSelectionView: View {
                     // Fixed bottom action section
                     if !selectedEquipment.isEmpty {
                         VStack(spacing: 16) {
-                            Text("Selected: \(selectedEquipment.map { $0.name }.joined(separator: ", "))")
+                            Text("Selected (\(selectedEquipment.count)): \(selectedEquipment.map { $0.name }.joined(separator: ", "))")
                                 .font(.footnote)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
@@ -144,13 +144,10 @@ struct EquipmentSelectionView: View {
                             
                             Button(action: continueToWorkout) {
                                 HStack(spacing: 8) {
-                                    Image(systemName: "arrow.right.circle.fill")
+                                    Image(systemName: "sparkles")
                                         .font(.headline)
-                                    Text("Continue")
+                                    Text("Generate Workout")
                                         .fontWeight(.semibold)
-                                    Text("(\(selectedEquipment.count))")
-                                        .fontWeight(.medium)
-                                        .opacity(0.8)
                                 }
                                 .font(.title3)
                                 .foregroundStyle(.white)

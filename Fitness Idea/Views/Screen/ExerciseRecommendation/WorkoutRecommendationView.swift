@@ -124,9 +124,15 @@ struct WorkoutRecommendationView: View {
                                 
                                 VStack(spacing: 12) {
                                     if viewModel.recommendedExercises.isEmpty {
-                                        Text("Generating recommendations...")
-                                            .foregroundColor(.secondary)
-                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack(spacing: 8) {
+                                            Image(systemName: "sparkles")
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                            
+                                            Text("Generating recommendations...")
+                                                .foregroundColor(.secondary)
+                                        }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                     
                                     ForEach(viewModel.partialRecommendedExercises) { exercise in

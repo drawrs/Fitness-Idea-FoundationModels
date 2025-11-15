@@ -76,7 +76,7 @@ struct BodyPartSelectionView: View {
                     // Fixed bottom action section
                     if !selectedBodyParts.isEmpty {
                         VStack(spacing: 16) {
-                            Text("Selected: \(selectedBodyParts.map { $0.name }.joined(separator: ", "))")
+                            Text("Selected (\(selectedBodyParts.count)): \(selectedBodyParts.map { $0.name }.joined(separator: ", "))")
                                 .font(.footnote)
                                 .fontWeight(.medium)
                                 .foregroundStyle(.secondary)
@@ -87,13 +87,8 @@ struct BodyPartSelectionView: View {
                             
                             Button(action: startWorkout) {
                                 HStack(spacing: 8) {
-                                    Image(systemName: "arrow.right.circle.fill")
-                                        .font(.headline)
                                     Text("Continue")
                                         .fontWeight(.semibold)
-                                    Text("(\(selectedBodyParts.count))")
-                                        .fontWeight(.medium)
-                                        .opacity(0.8)
                                 }
                                 .font(.title3)
                                 .foregroundStyle(.white)
