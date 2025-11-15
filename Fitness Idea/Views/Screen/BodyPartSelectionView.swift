@@ -37,6 +37,7 @@ struct BodyPartSelectionView: View {
                                     .foregroundStyle(.primary)
                                     .tracking(-0.5)
                                     .multilineTextAlignment(.center)
+                                    .fontDesign(.rounded)
                                 
                                 Text("Select the body parts you want to exercise today")
                                     .font(.title3)

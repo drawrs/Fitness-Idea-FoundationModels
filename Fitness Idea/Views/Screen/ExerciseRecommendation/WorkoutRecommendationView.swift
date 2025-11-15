@@ -34,6 +34,7 @@ struct WorkoutRecommendationView: View {
                                 
                                 Text("Workout Recommendations")
                                     .font(.largeTitle)
+                                    .fontDesign(.rounded)
                                     .fontWeight(.heavy)
                                     .foregroundStyle(.primary)
                                     .tracking(-0.5)
@@ -188,8 +189,10 @@ struct WorkoutRecommendationView: View {
             }
             .navigationBarHidden(true)
             .onAppear {
-                Task {
-                    await viewModel.generateRecommendation()
+                if viewModel.recommendedExercises.isEmpty {
+                    Task {
+                        await viewModel.generateRecommendation()
+                    }
                 }
             }
     }

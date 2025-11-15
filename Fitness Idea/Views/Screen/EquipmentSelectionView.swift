@@ -63,6 +63,7 @@ struct EquipmentSelectionView: View {
                                 
                                 Text("Select Equipment")
                                     .font(.largeTitle)
+                                    .fontDesign(.rounded)
                                     .fontWeight(.heavy)
                                     .foregroundStyle(.primary)
                                     .tracking(-0.5)
@@ -160,7 +161,6 @@ struct EquipmentSelectionView: View {
                             .padding(.horizontal, 20)
                         }
                         .padding(.top, 16)
-//                        .padding(.bottom, max(geometry.safeAreaInsets.bottom, 20))
                         .background(
                             Rectangle()
                                 .fill(.ultraThinMaterial)
