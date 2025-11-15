@@ -10,6 +10,7 @@ import SwiftUI
 struct WorkoutRecommendationView: View {
     @StateObject private var viewModel: WorkoutRecommendationViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var navigateToExercise = false
     
     init(selectedBodyParts: Set<BodyPart>, selectedEquipment: Set<Equipment>, onStartOver: @escaping () -> Void) {
         _viewModel = StateObject(wrappedValue: WorkoutRecommendationViewModel(selectedBodyParts: selectedBodyParts,
@@ -20,6 +21,11 @@ struct WorkoutRecommendationView: View {
     var body: some View {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
+                    NavigationLink(destination: ExerciseView(exercises: viewModel.recommendedExercises), isActive: $navigateToExercise) {
+                        EmptyView()
+                    }
+                    .hidden()
+                    
                     // Scrollable content
                     ScrollView {
                         VStack(spacing: 24) {
@@ -143,6 +149,9 @@ struct WorkoutRecommendationView: View {
                         Button(action: {
                             // Start the selected workout
                             viewModel.startWorkout()
+                            if !viewModel.recommendedExercises.isEmpty {
+                                navigateToExercise = true
+                            }
                         }) {
                             HStack(spacing: 8) {
                                 Image(systemName: "play.fill")
