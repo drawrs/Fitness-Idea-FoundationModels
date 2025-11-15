@@ -22,22 +22,33 @@ struct ExerciseView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(spacing: 24) {
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(exercise.name)
-                            .font(.system(size: 42, weight: .bold, design: .rounded))
-                            .frame(alignment: .leading)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        Spacer()
-
-                        Button(action: { showingSafariView = true }) {
-                            Image(systemName: "info.circle")
-                                .font(.title2)
-                                .foregroundStyle(.blue)
+                    VStack(spacing: 12) {
+                        // Exercise counter
+                        HStack {
+                            Text("Exercise \(viewModel.currentIndex + 1) of \(viewModel.totalExercises)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
                         }
-                        .accessibilityLabel("More information about \(exercise.name)")
+                        .padding(.horizontal)
+                        
+                        HStack(alignment: .firstTextBaseline, spacing: 8) {
+                            Text(exercise.name)
+                                .font(.system(size: 42, weight: .bold, design: .rounded))
+                                .frame(alignment: .leading)
+                                .fixedSize(horizontal: false, vertical: true)
+                            
+                            Spacer()
+
+                            Button(action: { showingSafariView = true }) {
+                                Image(systemName: "info.circle")
+                                    .font(.title2)
+                                    .foregroundStyle(.blue)
+                            }
+                            .accessibilityLabel("More information about \(exercise.name)")
+                        }
+                        .padding(.horizontal)
                     }
-                    .padding(.horizontal)
                     
                     
                     Divider()

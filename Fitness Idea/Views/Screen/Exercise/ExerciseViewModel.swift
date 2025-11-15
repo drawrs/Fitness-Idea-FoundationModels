@@ -53,6 +53,10 @@ final class ExerciseViewModel: ObservableObject {
         exercises.count > 1
     }
     
+    var totalExercises: Int {
+        exercises.count
+    }
+    
     private func setupTimer() {
         tickerCancellable = Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
