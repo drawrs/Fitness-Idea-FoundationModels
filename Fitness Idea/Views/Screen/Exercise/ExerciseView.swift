@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import SafariServices
 struct ExerciseView: View {
     @StateObject private var viewModel: ExerciseViewModel
     @Environment(\.dismiss) private var dismiss
+    @State private var showingSafariView = false
     
     init(exercises: [ExerciseRecommendation]) {
         self._viewModel = StateObject(wrappedValue: ExerciseViewModel(exercises: exercises))
@@ -20,11 +22,23 @@ struct ExerciseView: View {
         ZStack(alignment: .bottom) {
             ScrollView {
                 VStack(spacing: 24) {
-                    // Exercise name
-                    Text(exercise.name)
-                        .font(.system(size: 42, weight: .bold, design: .rounded))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(exercise.name)
+                            .font(.system(size: 42, weight: .bold, design: .rounded))
+                            .frame(alignment: .leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        Spacer()
+
+                        Button(action: { showingSafariView = true }) {
+                            Image(systemName: "info.circle")
+                                .font(.title2)
+                                .foregroundStyle(.blue)
+                        }
+                        .accessibilityLabel("More information about \(exercise.name)")
+                    }
+                    .padding(.horizontal)
+                    
                     
                     Divider()
                         .overlay(Color.black.opacity(0.4))
@@ -138,6 +152,9 @@ struct ExerciseView: View {
             .padding(.bottom, 24)
         }
         .navigationBarBackButtonHidden(true)
+        .sheet(isPresented: $showingSafariView) {
+            SafariView(url: URL(string: exercise.googleSearchURL) ?? URL(string: "https://www.google.com")!)
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button(action: { dismiss() }) {
@@ -165,10 +182,23 @@ struct ExerciseView: View {
     }
 }
 
+// MARK: - Safari View
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        return SFSafariViewController(url: url)
+    }
+    
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
+        // No updates needed
+    }
+}
+
 #Preview {
     let sample: [ExerciseRecommendation] = [
-        .init(name: "Jumping Jack", sets: 1, reps: 0, duration: "30s"),
-        .init(name: "Plank Hold", sets: 3, reps: 0, duration: "45s")
+        .init(name: "Jumping Jack", sets: 1, reps: 0, duration: "30s", googleSearchURL: "https://www.google.com/search?q=jumping+jack"),
+        .init(name: "Plank Hold", sets: 3, reps: 0, duration: "45s", googleSearchURL: "https://www.google.com/search?q=plank+hold")
     ]
     NavigationStack { ExerciseView(exercises: sample) }
 }

@@ -29,7 +29,7 @@ final class ExerciseViewModel: ObservableObject {
     var safeExercise: ExerciseRecommendation {
         exercises.indices.contains(currentIndex) 
             ? exercises[currentIndex] 
-            : .init(name: "Exercise", sets: 1, reps: 0, duration: "30s")
+        : .init(name: "Exercise", sets: 1, reps: 0, duration: "30s", googleSearchURL: "https://www.google.com/search?q=jumping+jack")
     }
     
     var isStaticHold: Bool {

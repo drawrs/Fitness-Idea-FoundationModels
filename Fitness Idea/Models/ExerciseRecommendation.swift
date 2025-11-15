@@ -22,4 +22,8 @@ struct ExerciseRecommendation: Identifiable {
     
     @Guide(description: "Duration of the exercise in seconds for static movements (e.g., '30s', '45s'). For non-static exercises, use '0s'.")
     let duration: String
+    
+    
+    @Guide(description: "Google search URL for finding more information about this exercise, including proper form and technique. Example: https://www.google.com/search?q=name+of+the+exercise")
+    let googleSearchURL: String
 }
