@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
-import SafariServices
+
 struct ExerciseView: View {
     @StateObject private var viewModel: ExerciseViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var showingSafariView = false
+    @State private var showingCompletionView = false
     
     init(exercises: [ExerciseRecommendation]) {
         self._viewModel = StateObject(wrappedValue: ExerciseViewModel(exercises: exercises))
@@ -133,31 +134,58 @@ struct ExerciseView: View {
                 
                 Spacer()
                 
-                if viewModel.isStaticHold {
-                    Button(action: viewModel.toggleTimer) {
-                        Image(systemName: viewModel.isRunning ? "pause.fill" : "play.fill")
-                            .font(.title2.weight(.bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
-                            .background(Circle().fill(Color(UIColor.systemGray)))
-                    }
-                    .accessibilityLabel(viewModel.isRunning ? "Pause" : "Start")
-                } else {
-                    Button(action: viewModel.advanceAfterSetCompletion) {
+                if viewModel.isWorkoutComplete {
+                    // Workout complete - show completion options
+                    Button(action: { showingCompletionView = true }) {
                         HStack(spacing: 8) {
-                            Image(systemName: viewModel.currentSet == 3 ? "forward" : "checkmark")
+                            Image(systemName: "checkmark.circle.fill")
                                 .font(.title3.weight(.bold))
-                            Text(viewModel.currentSet == 3 ? "Next exercise" : "Complete set")
+                            Text("Workout Complete!")
                                 .font(.headline)
                                 .bold()
                         }
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
                         .frame(height: 56)
-                        .background(Capsule().fill(viewModel.currentSet == 3 ? Color.green : Color.accentColor))
+                        .background(Capsule().fill(Color.green))
                     }
-                    .accessibilityLabel(viewModel.currentSet == 3 ? "Next exercise" : "Complete set")
+                    .accessibilityLabel("Workout complete")
+                } else {
+                    if viewModel.isStaticHold {
+                        Button(action: viewModel.toggleTimer) {
+                            Image(systemName: viewModel.isRunning ? "pause.fill" : "play.fill")
+                                .font(.title2.weight(.bold))
+                                .foregroundStyle(.white)
+                                .frame(width: 56, height: 56)
+                                .background(Circle().fill(Color(UIColor.systemGray)))
+                        }
+                        .accessibilityLabel(viewModel.isRunning ? "Pause" : "Start")
+                    } else {
+                        Button(action: viewModel.advanceAfterSetCompletion) {
+                            HStack(spacing: 8) {
+                                Image(systemName: viewModel.currentSet == max(1, exercise.sets) ? "forward" : "checkmark")
+                                    .font(.title3.weight(.bold))
+                                Text(viewModel.currentSet == max(1, exercise.sets) ? "Next exercise" : "Complete set")
+                                .font(.headline)
+                                .bold()
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .frame(height: 56)
+                            .background(
+                                Capsule().fill(
+                                    viewModel.currentSet == max(1, exercise.sets) ? Color.green : Color.accentColor
+                                )
+                            )
+                        }
+                        .accessibilityLabel(
+                            viewModel.isWorkoutComplete
+                            ? "Finish workout"
+                            : (viewModel.currentSet == max(1, exercise.sets) ? "Next exercise" : "Complete set")
+                        )
+                    }
                 }
+                
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 24)
@@ -165,6 +193,18 @@ struct ExerciseView: View {
         .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showingSafariView) {
             SafariView(url: URL(string: exercise.googleSearchURL) ?? URL(string: "https://www.google.com")!)
+        }
+        .sheet(isPresented: $showingCompletionView) {
+            WorkoutCompletionView(
+                onRestart: {
+                    showingCompletionView = false
+                    viewModel.restartWorkout()
+                },
+                onStartOver: {
+                    showingCompletionView = false
+                    dismiss()
+                }
+            )
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -193,18 +233,7 @@ struct ExerciseView: View {
     }
 }
 
-// MARK: - Safari View
-struct SafariView: UIViewControllerRepresentable {
-    let url: URL
-    
-    func makeUIViewController(context: Context) -> SFSafariViewController {
-        return SFSafariViewController(url: url)
-    }
-    
-    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
-        // No updates needed
-    }
-}
+
 
 #Preview {
     let sample: [ExerciseRecommendation] = [

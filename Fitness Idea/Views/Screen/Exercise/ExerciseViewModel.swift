@@ -17,7 +17,7 @@ final class ExerciseViewModel: ObservableObject {
     @Published var totalSeconds: Int = 0
     @Published var currentSet: Int = 1
     
-    private let exercises: [ExerciseRecommendation]
+    @Published var exercises: [ExerciseRecommendation]
     private var tickerCancellable: AnyCancellable?
     
     init(exercises: [ExerciseRecommendation]) {
@@ -55,6 +55,14 @@ final class ExerciseViewModel: ObservableObject {
     
     var totalExercises: Int {
         exercises.count
+    }
+    
+    var isOnLastExercise: Bool {
+        currentIndex == exercises.count - 1
+    }
+    
+    var isWorkoutComplete: Bool {
+        isOnLastExercise && currentSet >= max(1, safeExercise.sets)
     }
     
     private func setupTimer() {
@@ -108,7 +116,9 @@ final class ExerciseViewModel: ObservableObject {
             isRunning = true
         } else {
             // Completed exercise; move to next if available
-            nextExercise()
+            if !isWorkoutComplete {
+                nextExercise()
+            }
         }
     }
     
@@ -122,6 +132,11 @@ final class ExerciseViewModel: ObservableObject {
     func prevExercise() {
         guard !exercises.isEmpty else { return }
         currentIndex = (currentIndex - 1 + exercises.count) % exercises.count
+        configureTimer(for: safeExercise)
+    }
+    
+    func restartWorkout() {
+        currentIndex = 0
         configureTimer(for: safeExercise)
     }
     
