@@ -17,7 +17,7 @@ final class ExerciseViewModel: ObservableObject {
     @Published var totalSeconds: Int = 0
     @Published var currentSet: Int = 1
     
-    @Published var exercises: [ExerciseRecommendation]
+    private let exercises: [ExerciseRecommendation]
     private var tickerCancellable: AnyCancellable?
     
     init(exercises: [ExerciseRecommendation]) {

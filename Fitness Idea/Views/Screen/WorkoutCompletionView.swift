@@ -29,13 +29,6 @@ struct WorkoutCompletionView: View {
             }
             .navigationTitle("Complete!")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        onStartOver()
-                    }
-                }
-            }
         }
     }
     
@@ -69,7 +62,6 @@ struct WorkoutCompletionView: View {
             finishButton
         }
         .padding(.horizontal, 24)
-        .padding(.bottom, 32)
     }
     
     /// Button to restart the current workout
@@ -97,10 +89,8 @@ struct WorkoutCompletionView: View {
                     .fontWeight(.semibold)
             }
             .font(.title3)
-            .foregroundStyle(.white)
             .padding(.vertical, 18)
             .frame(maxWidth: .infinity)
-            .background(Color.green, in: RoundedRectangle(cornerRadius: 16))
         }
     }
 }
