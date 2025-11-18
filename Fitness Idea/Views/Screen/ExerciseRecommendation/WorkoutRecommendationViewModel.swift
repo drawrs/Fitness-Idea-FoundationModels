@@ -74,6 +74,7 @@ final class WorkoutRecommendationViewModel: ObservableObject {
                     - For dynamic exercises, use realistic sets and reps, and set duration to "0s".
                     """
                 }
+            
             let stream = languageModelSession.streamResponse(to: prompt, generating: [ExerciseRecommendation].self)
             
             for try await snapshot in stream {
