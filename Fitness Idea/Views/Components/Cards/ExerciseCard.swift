@@ -8,13 +8,13 @@ import SwiftUI
 import SafariServices
 
 struct ExerciseCard: View {
-    let exercise: ExerciseRecommendation.PartiallyGenerated
+    let exercise: ExerciseRecommendation
     @State private var showingSafariView = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text(exercise.name ?? "...")
+                Text(exercise.name)
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(.primary)
@@ -28,19 +28,18 @@ struct ExerciseCard: View {
                         .font(.title3)
                         .foregroundStyle(.secondary)
                 }
-                .disabled(exercise.googleSearchURL == nil)
             }
 
             HStack(spacing: 16) {
-                Label("\(exercise.sets ?? 0) sets", systemImage: "square.stack.3d.up.fill")
+                Label("\(exercise.sets) sets", systemImage: "square.stack.3d.up.fill")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Label("\(exercise.reps ?? 0) reps", systemImage: "repeat")
+                Label("\(exercise.reps) reps", systemImage: "repeat")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                Label(exercise.duration ?? "...", systemImage: "timer")
+                Label(exercise.duration, systemImage: "timer")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -53,8 +52,7 @@ struct ExerciseCard: View {
                 .stroke(Color(.systemGray4), lineWidth: 1)
         )
         .sheet(isPresented: $showingSafariView) {
-            if let urlString = exercise.googleSearchURL,
-               let url = URL(string: urlString) {
+            if let url = URL(string: exercise.googleSearchURL) {
                 SafariView(url: url)
                     .ignoresSafeArea()
             }

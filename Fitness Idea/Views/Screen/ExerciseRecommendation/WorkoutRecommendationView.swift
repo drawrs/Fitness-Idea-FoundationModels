@@ -123,23 +123,9 @@ struct WorkoutRecommendationView: View {
 
                                 
                                 VStack(spacing: 12) {
-                                    if viewModel.recommendedExercises.isEmpty {
-                                        HStack(spacing: 8) {
-                                            Image(systemName: "sparkles")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                            
-                                            Text("Generating recommendations...")
-                                                .foregroundColor(.secondary)
-                                        }
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    }
+                                    // MARK: Generation Indicator
                                     
-                                    ForEach(viewModel.partialRecommendedExercises) { exercise in
-                                        ExerciseCard(exercise: exercise)
-                                            .animation(.easeInOut, value: viewModel.partialRecommendedExercises.map(\.id))
-                                    }
-                                    
+                                    // MARK: Exercise Recommendation List
                                     
                                 }
                                 .padding(.horizontal, 20)
@@ -195,11 +181,7 @@ struct WorkoutRecommendationView: View {
             }
             .navigationBarHidden(true)
             .onAppear {
-                if viewModel.recommendedExercises.isEmpty {
-                    Task {
-                        await viewModel.generateRecommendation()
-                    }
-                }
+                
             }
     }
 }
