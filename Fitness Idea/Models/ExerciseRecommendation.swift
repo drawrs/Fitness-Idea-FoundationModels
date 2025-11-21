@@ -6,6 +6,7 @@
 //
 import Foundation
 
+// TODO: 6. Make this model generable
 struct ExerciseRecommendation: Identifiable {
     let id = UUID()
     let name: String

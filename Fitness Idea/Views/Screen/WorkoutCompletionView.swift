@@ -8,10 +8,7 @@ import SwiftUI
 
 // MARK: - Workout Completion View
 struct WorkoutCompletionView: View {
-    /// Closure called when user wants to restart the current workout
     let onRestart: () -> Void
-    
-    /// Closure called when user wants to finish and return to main screen
     let onStartOver: () -> Void
     
     var body: some View {
@@ -33,8 +30,6 @@ struct WorkoutCompletionView: View {
     }
     
     // MARK: - Private Views
-    
-    /// The celebration content displayed when workout is completed
     private var celebrationContent: some View {
         VStack(spacing: 24) {
             Image(systemName: "trophy.fill")
@@ -55,7 +50,6 @@ struct WorkoutCompletionView: View {
         }
     }
     
-    /// Action buttons for restarting workout or finishing session
     private var actionButtons: some View {
         VStack(spacing: 16) {
             restartButton
@@ -64,7 +58,6 @@ struct WorkoutCompletionView: View {
         .padding(.horizontal, 24)
     }
     
-    /// Button to restart the current workout
     private var restartButton: some View {
         Button(action: onRestart) {
             HStack(spacing: 8) {
@@ -81,7 +74,6 @@ struct WorkoutCompletionView: View {
         }
     }
     
-    /// Button to finish workout session and return to main screen
     private var finishButton: some View {
         Button(action: onStartOver) {
             HStack(spacing: 8) {

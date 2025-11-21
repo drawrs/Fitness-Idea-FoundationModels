@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FoundationModels
 
 struct WorkoutRecommendationView: View {
     @StateObject private var viewModel: WorkoutRecommendationViewModel
@@ -123,9 +124,9 @@ struct WorkoutRecommendationView: View {
 
                                 
                                 VStack(spacing: 12) {
-                                    // MARK: Generation Indicator
+                                    // TODO: 8.2 Generation Indicator
                                     
-                                    // MARK: Exercise Recommendation List
+                                    // TODO: 8.1 Exercise Recommendation List
                                     
                                 }
                                 .padding(.horizontal, 20)
@@ -181,6 +182,7 @@ struct WorkoutRecommendationView: View {
             }
             .navigationBarHidden(true)
             .onAppear {
+                // TODO: 5. Generate recommendation on appear
                 
             }
     }
@@ -203,3 +205,4 @@ struct WorkoutRecommendationView: View {
         onStartOver: {}
     )
 }
+
